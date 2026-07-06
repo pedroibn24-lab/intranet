@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intranet IBN — Recursos Humanos</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/modal.css" />
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+
+  <script type="module" src="js/components.js"></script>
+</head>
+<body>
+
+  <!-- HEADER + NAV injetados por js/components.js -->
+  <div id="site-header"></div>
+
+  <main>
+
+    <!-- ========================================================
+         HERO — Recursos Humanos
+         ======================================================== -->
+    <section class="hero-rh">
+      <div class="hero-rh__conteudo">
+        <h1 class="hero-rh__titulo">Recursos Humanos</h1>
+        <div class="hero-rh__linha"></div>
+        <p class="hero-rh__subtitulo">
+          Aqui você encontra documentos, políticas, comunicados
+          e informações importantes sobre o RH.
+        </p>
+      </div>
+    </section>
+
+    <!-- Faixa escura com atalhos de categorias -->
+    <section class="faixa-categorias">
+      <div class="faixa-categorias__grid">
+        <div class="categoria">
+          <i class="fa-regular fa-folder-open categoria__icone"></i>
+          <div>
+            <div class="categoria__titulo">Documentos</div>
+            <div class="categoria__desc">Políticas, manuais e regulamentos</div>
+          </div>
+        </div>
+        <div class="categoria">
+          <i class="fa-solid fa-bullhorn categoria__icone"></i>
+          <div>
+            <div class="categoria__titulo">Comunicados Internos</div>
+            <div class="categoria__desc">Avisos e informativos do RH</div>
+          </div>
+        </div>
+        <div class="categoria">
+          <i class="fa-regular fa-calendar categoria__icone"></i>
+          <div>
+            <div class="categoria__titulo">Benefícios</div>
+            <div class="categoria__desc">Informações e orientações</div>
+          </div>
+        </div>
+        <div class="categoria">
+          <i class="fa-regular fa-clock categoria__icone"></i>
+          <div>
+            <div class="categoria__titulo">Ponto e Jornada</div>
+            <div class="categoria__desc">Manuais e procedimentos</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         CONTEÚDO — grid de 2 colunas
+         ======================================================== -->
+    <div class="rh-conteudo">
+
+      <!-- Coluna esquerda: Documentos e Políticas -->
+      <section class="cartao">
+        <div class="cartao__cabecalho">
+          <h2 class="cartao__titulo">
+            <i class="fa-regular fa-file-lines icone-secao"></i>
+            Documentos e Políticas
+          </h2>
+          <button class="link-ver-todos" id="verTodosDocumentos">
+            Ver todos <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <!-- Lista resumida: preenchida pelo Firestore no passo 4 -->
+        <ul class="lista-documentos" id="listaDocumentos">
+          <li class="lista-estado">Carregando documentos…</li>
+        </ul>
+      </section>
+
+      <!-- Coluna direita: Comunicados -->
+      <aside class="rh-lateral">
+        <section class="cartao">
+          <div class="cartao__cabecalho">
+            <h2 class="cartao__titulo">
+              <i class="fa-solid fa-bullhorn icone-secao"></i>
+              Comunicados Internos
+            </h2>
+          </div>
+
+          <!-- Lista resumida: preenchida pelo Firestore no passo 4 -->
+          <div id="listaComunicados">
+            <p class="lista-estado">Carregando comunicados…</p>
+          </div>
+
+          <button class="btn btn--secundario btn--bloco" id="verTodosComunicados">
+            Ver todos os comunicados
+          </button>
+        </section>
+      </aside>
+
+      <!-- Faixa de próximas datas importantes: preenchida no passo do JS -->
+      <section class="datas-importantes">
+        <div class="datas-importantes__titulo">
+          <i class="fa-regular fa-calendar-days icone"></i>
+          Próximas datas importantes
+        </div>
+        <div class="datas-importantes__lista" id="listaDatas">
+          <span class="lista-estado">Carregando datas…</span>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- FOOTER injetado por js/components.js -->
+  <div id="site-footer"></div>
+
+  <!-- ========================================================
+       MODAL 1 — TODOS OS DOCUMENTOS (busca + lista completa)
+       Aberto ao clicar "Ver todos" em Documentos
+       ======================================================== -->
+  <div class="modal oculto" id="modalTodosDocumentos" role="dialog" aria-modal="true" aria-labelledby="tituloTodosDocumentos">
+    <div class="modal__overlay" data-fechar-modal></div>
+
+    <div class="modal__caixa" role="document">
+      <header class="modal__cabecalho">
+        <h3 class="modal__titulo" id="tituloTodosDocumentos">Todos os documentos</h3>
+        <button class="modal__fechar" data-fechar-modal aria-label="Fechar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </header>
+
+      <!-- Busca dentro da janela -->
+      <div class="modal__busca">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" id="buscaTodosDocumentos" placeholder="Buscar documento..." />
+      </div>
+
+      <!-- Lista completa: preenchida pelo Firestore no passo 4 -->
+      <ul class="lista-documentos modal__lista" id="listaTodosDocumentos">
+        <li class="lista-estado">Carregando documentos…</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 2 — TODOS OS COMUNICADOS (busca + lista completa)
+       Aberto ao clicar "Ver todos os comunicados"
+       ======================================================== -->
+  <div class="modal oculto" id="modalTodosComunicados" role="dialog" aria-modal="true" aria-labelledby="tituloTodosComunicados">
+    <div class="modal__overlay" data-fechar-modal></div>
+
+    <div class="modal__caixa" role="document">
+      <header class="modal__cabecalho">
+        <h3 class="modal__titulo" id="tituloTodosComunicados">Todos os comunicados</h3>
+        <button class="modal__fechar" data-fechar-modal aria-label="Fechar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </header>
+
+      <div class="modal__busca">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" id="buscaTodosComunicados" placeholder="Buscar comunicado..." />
+      </div>
+
+      <div class="modal__lista" id="listaTodosComunicados">
+        <p class="lista-estado">Carregando comunicados…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 3 — VISUALIZAÇÃO DE UM DOCUMENTO (preview/imagem)
+       Aberto ao clicar "Ver documento"
+       ======================================================== -->
+  <div class="modal oculto" id="modalDocumento" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+    <div class="modal__overlay" data-fechar-modal></div>
+
+    <div class="modal__caixa" role="document">
+      <header class="modal__cabecalho">
+        <h3 class="modal__titulo" id="modalTitulo">Documento</h3>
+        <button class="modal__fechar" data-fechar-modal aria-label="Fechar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </header>
+
+      <div class="modal__corpo" id="modalCorpo">
+        <!-- A imagem/preview do documento é injetada aqui pelo JS (Storage) -->
+      </div>
+
+      <footer class="modal__rodape">
+        <a href="#" class="btn btn--secundario" id="modalDownload" target="_blank" rel="noopener">
+          <i class="fa-solid fa-download"></i> Baixar
+        </a>
+        <button class="btn btn--primario" data-fechar-modal>Fechar</button>
+      </footer>
+    </div>
+  </div>
+
+</body>
+</html>

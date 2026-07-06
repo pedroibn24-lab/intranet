@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intranet IBN — Administração</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+
+  <script type="module" src="js/components.js"></script>
+  <script type="module" src="js/admin.js"></script>
+</head>
+<body>
+
+  <!-- HEADER + NAV injetados por js/components.js -->
+  <div id="site-header"></div>
+
+  <main>
+
+    <!-- ========================================================
+         BLOQUEIO — exibido enquanto o acesso não é autorizado
+         ======================================================== -->
+    <section class="admin-bloqueio" id="adminBloqueio">
+      <div class="admin-bloqueio__caixa">
+        <i class="fa-solid fa-lock admin-bloqueio__icone"></i>
+        <h1 class="admin-bloqueio__titulo">Área restrita</h1>
+        <p class="admin-bloqueio__texto" id="adminBloqueioTexto">
+          Verificando permissão de acesso…
+        </p>
+        <a href="login.html" class="btn btn--primario">Fazer login</a>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         CONTEÚDO — liberado apenas para administradores autenticados
+         ======================================================== -->
+    <div class="admin oculto" id="adminConteudo">
+
+      <section class="hero-rh">
+        <div class="hero-rh__conteudo admin__cabecalho">
+          <div>
+            <h1 class="hero-rh__titulo">Administração</h1>
+            <div class="hero-rh__linha"></div>
+            <p class="hero-rh__subtitulo">
+              Cadastre comunicados, documentos e datas importantes do RH.
+            </p>
+          </div>
+          <div class="admin__usuario">
+            <span id="adminUsuarioNome">—</span>
+            <button class="btn btn--secundario btn--sm" id="btnSair">
+              <i class="fa-solid fa-right-from-bracket"></i> Sair
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div class="admin__grid">
+
+        <!-- ========== FORM: NOVO COMUNICADO ========== -->
+        <section class="cartao">
+          <h2 class="cartao__titulo cartao__titulo--sm">
+            <i class="fa-solid fa-bullhorn icone-secao"></i> Novo comunicado
+          </h2>
+
+          <div class="admin__msg oculto" id="msgComunicado" role="alert"></div>
+
+          <form class="admin__form" id="formComunicado" novalidate>
+            <label class="campo">
+              <span class="campo__label">Título</span>
+              <input type="text" id="comTitulo" class="campo__input" required />
+            </label>
+
+            <label class="campo">
+              <span class="campo__label">Data</span>
+              <input type="date" id="comData" class="campo__input" required />
+            </label>
+
+            <label class="campo">
+              <span class="campo__label">Conteúdo</span>
+              <textarea id="comConteudo" class="campo__input" required></textarea>
+            </label>
+
+            <button type="submit" class="btn btn--primario btn--bloco">
+              Publicar comunicado
+            </button>
+          </form>
+        </section>
+
+        <!-- ========== FORM: NOVO DOCUMENTO ========== -->
+        <section class="cartao">
+          <h2 class="cartao__titulo cartao__titulo--sm">
+            <i class="fa-regular fa-file-lines icone-secao"></i> Novo documento
+          </h2>
+
+          <div class="admin__msg oculto" id="msgDocumento" role="alert"></div>
+
+          <form class="admin__form" id="formDocumento" novalidate>
+            <label class="campo">
+              <span class="campo__label">Título</span>
+              <input type="text" id="docTitulo" class="campo__input" required />
+            </label>
+
+            <label class="campo">
+              <span class="campo__label">Data</span>
+              <input type="date" id="docData" class="campo__input" required />
+            </label>
+
+            <label class="campo">
+              <span class="campo__label">Arquivo (imagem ou PDF)</span>
+              <input type="file" id="docArquivo" class="campo__input" accept="image/*,application/pdf" required />
+            </label>
+
+            <button type="submit" class="btn btn--primario btn--bloco">
+              Enviar documento
+            </button>
+          </form>
+        </section>
+
+        <!-- ========== FORM: NOVA DATA IMPORTANTE ========== -->
+        <section class="cartao">
+          <h2 class="cartao__titulo cartao__titulo--sm">
+            <i class="fa-regular fa-calendar-days icone-secao"></i> Nova data importante
+          </h2>
+
+          <div class="admin__msg oculto" id="msgData" role="alert"></div>
+
+          <form class="admin__form" id="formData" novalidate>
+            <label class="campo">
+              <span class="campo__label">Rótulo</span>
+              <input type="text" id="dataRotulo" class="campo__input" placeholder="Ex: Pagamento" required />
+            </label>
+
+            <label class="campo">
+              <span class="campo__label">Dia / período</span>
+              <input type="text" id="dataDia" class="campo__input" placeholder="Ex: 20/06 ou 15/07 a 29/07" required />
+            </label>
+
+            <button type="submit" class="btn btn--primario btn--bloco">
+              Adicionar data
+            </button>
+          </form>
+        </section>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER injetado por js/components.js -->
+  <div id="site-footer"></div>
+
+</body>
+</html>

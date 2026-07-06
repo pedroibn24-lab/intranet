@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intranet IBN — Acesso</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+
+  <script type="module" src="js/auth.js"></script>
+</head>
+<body class="tela-auth">
+
+  <main class="auth">
+    <div class="auth__cartao">
+
+      <!-- Faixa de marca com o logo -->
+      <div class="auth__marca">
+        <img src="assets/IBN-LOGO.png" alt="Logo IBN" class="auth__logo" />
+        <span class="auth__marca-titulo">Intranet IBN</span>
+        <span class="auth__marca-sub">Acesso restrito a colaboradores</span>
+      </div>
+
+      <div class="auth__corpo">
+
+        <!-- Abas Entrar / Criar conta -->
+        <div class="auth__abas">
+          <button class="auth__aba auth__aba--ativa" data-aba-auth="login">Entrar</button>
+          <button class="auth__aba" data-aba-auth="cadastro">Criar conta</button>
+        </div>
+
+        <!-- Mensagem de feedback (erro/sucesso) preenchida pelo auth.js -->
+        <div class="auth__mensagem oculto" id="authMensagem" role="alert"></div>
+
+        <!-- ========== FORM: LOGIN ========== -->
+        <form class="auth__form" id="formLogin" novalidate>
+          <label class="campo">
+            <span class="campo__label">E-mail</span>
+            <input type="email" id="loginEmail" class="campo__input" placeholder="voce@ibnegocios.com.br" required />
+          </label>
+
+          <label class="campo">
+            <span class="campo__label">Senha</span>
+            <input type="password" id="loginSenha" class="campo__input" placeholder="Sua senha" required />
+          </label>
+
+          <button type="submit" class="btn btn--primario btn--bloco">Entrar</button>
+        </form>
+
+        <!-- ========== FORM: CADASTRO ========== -->
+        <form class="auth__form oculto" id="formCadastro" novalidate>
+          <label class="campo">
+            <span class="campo__label">Nome completo</span>
+            <input type="text" id="cadNome" class="campo__input" placeholder="Seu nome" required />
+          </label>
+
+          <label class="campo">
+            <span class="campo__label">E-mail corporativo</span>
+            <input type="email" id="cadEmail" class="campo__input" placeholder="voce@ibnegocios.com.br" required />
+          </label>
+
+          <label class="campo">
+            <span class="campo__label">Senha</span>
+            <input type="password" id="cadSenha" class="campo__input" placeholder="Mínimo de 6 caracteres" required />
+          </label>
+
+          <label class="campo">
+            <span class="campo__label">Confirmar senha</span>
+            <input type="password" id="cadSenha2" class="campo__input" placeholder="Repita a senha" required />
+          </label>
+
+          <p class="auth__dica">
+            <i class="fa-solid fa-circle-info"></i>
+            Use seu e-mail corporativo. Domínios pessoais (gmail, outlook…) não são aceitos.
+          </p>
+
+          <button type="submit" class="btn btn--primario btn--bloco">Criar conta</button>
+        </form>
+
+        <a href="index.html" class="auth__voltar">
+          <i class="fa-solid fa-arrow-left"></i> Voltar para a intranet
+        </a>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+/* =========================================================
+   Área administrativa
+   ========================================================= */
+
+/* Bloqueio de acesso */
+.admin-bloqueio {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.admin-bloqueio__caixa {
+  max-width: 420px;
+  text-align: center;
+  background: var(--cor-superficie);
+  border: 1px solid var(--borda-suave);
+  border-radius: var(--raio-lg);
+  box-shadow: var(--sombra-card);
+  padding: 40px 32px;
+}
+
+.admin-bloqueio__icone {
+  font-size: 36px;
+  color: var(--cor-dourado);
+  margin-bottom: 14px;
+}
+
+.admin-bloqueio__titulo {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.admin-bloqueio__texto {
+  font-size: 14.5px;
+  color: var(--cor-texto-suave);
+  margin-bottom: 22px;
+}
+
+/* Cabeçalho da área admin */
+.admin__cabecalho {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.admin__usuario {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cor-texto);
+}
+
+/* Grid de formulários */
+.admin__grid {
+  max-width: var(--largura-max);
+  margin: 0 auto;
+  padding: 36px 32px 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+.admin__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* Mensagens de feedback dos formulários */
+.admin__msg {
+  padding: 11px 14px;
+  border-radius: var(--raio-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+  margin-top: 16px;
+}
+
+.admin__msg--erro {
+  background: #f7e3df;
+  color: #9c3322;
+  border: 1px solid #e7c3ba;
+}
+
+.admin__msg--sucesso {
+  background: #e4f1e9;
+  color: #24694a;
+  border: 1px solid #bfe0cd;
+}
+
+/* Ajuste do input de arquivo */
+input[type="file"].campo__input {
+  padding: 9px 12px;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .admin__grid {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}

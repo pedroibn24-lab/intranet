@@ -1,0 +1,141 @@
+/* =========================================================
+   Tela de acesso (login / cadastro)
+   ========================================================= */
+
+.tela-auth {
+  min-height: 100vh;
+  display: flex;
+  background: linear-gradient(135deg, #efe8dc 0%, #e2d6c1 100%);
+}
+
+.auth {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+}
+
+.auth__cartao {
+  width: 100%;
+  max-width: 420px;
+  background: var(--cor-superficie);
+  border-radius: var(--raio-lg);
+  box-shadow: var(--sombra-media);
+  overflow: hidden;
+}
+
+/* Faixa de marca (topo escuro com o logo branco) */
+.auth__marca {
+  background: var(--cor-barra-escura);
+  color: #fff;
+  padding: 30px 28px 24px;
+  text-align: center;
+}
+
+.auth__logo {
+  height: 54px;
+  width: auto;
+  margin: 0 auto 12px;
+}
+
+.auth__marca-titulo {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.auth__marca-sub {
+  display: block;
+  font-size: 13px;
+  color: rgba(244, 239, 231, 0.65);
+  margin-top: 4px;
+}
+
+.auth__corpo {
+  padding: 26px 28px 30px;
+}
+
+/* Abas */
+.auth__abas {
+  display: flex;
+  gap: 6px;
+  background: var(--cor-superficie-alt);
+  border-radius: var(--raio-pill);
+  padding: 5px;
+  margin-bottom: 22px;
+}
+
+.auth__aba {
+  flex: 1;
+  padding: 10px;
+  border-radius: var(--raio-pill);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--cor-texto-suave);
+  transition: background 0.2s, color 0.2s;
+}
+
+.auth__aba--ativa {
+  background: var(--cor-dourado);
+  color: #fff;
+}
+
+/* Formulários */
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Dica do domínio corporativo */
+.auth__dica {
+  display: flex;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--cor-texto-suave);
+  background: var(--cor-superficie-alt);
+  border-radius: var(--raio-sm);
+  padding: 10px 12px;
+}
+
+.auth__dica i {
+  color: var(--cor-dourado);
+  margin-top: 2px;
+}
+
+/* Mensagens de feedback */
+.auth__mensagem {
+  padding: 11px 14px;
+  border-radius: var(--raio-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+
+.auth__mensagem--erro {
+  background: #f7e3df;
+  color: #9c3322;
+  border: 1px solid #e7c3ba;
+}
+
+.auth__mensagem--sucesso {
+  background: #e4f1e9;
+  color: #24694a;
+  border: 1px solid #bfe0cd;
+}
+
+/* Link de voltar */
+.auth__voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cor-dourado);
+}
+
+.auth__voltar:hover {
+  text-decoration: underline;
+}

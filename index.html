@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intranet IBN</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+
+  <script type="module" src="js/components.js"></script>
+</head>
+<body>
+
+  <!-- HEADER + NAV injetados por js/components.js -->
+  <div id="site-header"></div>
+
+  <main>
+
+    <!-- ========================================================
+         HERO — Nome do instituto
+         ======================================================== -->
+    <section class="hero-inicio">
+      <div class="hero-inicio__conteudo">
+        <h1 class="hero-inicio__titulo">Instituto Brasileiro<br />de Negócios</h1>
+        <div class="hero-inicio__linha"></div>
+      </div>
+    </section>
+
+    <!-- Redes sociais -->
+    <div class="redes-sociais">
+      <a href="https://www.instagram.com/ibnegocios" class="rede-social" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+        <i class="fa-brands fa-instagram"></i>
+      </a>
+      <a href="https://ibnegocios.com.br/" class="rede-social" aria-label="Site" target="_blank" rel="noopener noreferrer">
+        <i class="fa-solid fa-link"></i>
+      </a>
+      <a href="#" class="rede-social" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+        <i class="fa-brands fa-facebook-f"></i>
+      </a>
+    </div>
+
+    <!-- ========================================================
+         DIRETRIZES ESTRATÉGICAS
+         4 cards (Missão, Visão, Valores, Cultura) — imagens em /assets
+         ======================================================== -->
+    <section class="secao">
+      <div class="secao__faixa-titulo">
+        <div class="secao__faixa-conteudo">
+          <h2 class="secao__titulo">Diretrizes Estratégicas</h2>
+        </div>
+      </div>
+      
+      <div class="secao__corpo">
+        <div class="diretrizes">
+          <figure class="diretriz">
+            <img src="assets/missão.jpg" alt="Missão: Transformar a vida das pessoas e das empresas através da educação" />
+          </figure>
+          <figure class="diretriz">
+            <img src="assets/visão.jpg" alt="Visão: Ser a melhor empresa prestadora de serviços de educação e consultoria da região" />
+          </figure>
+          <figure class="diretriz">
+            <img src="assets/valores.jpg" alt="Valores: Respeito, alta performance, transparência, espírito de dono e ética" />
+          </figure>
+          <figure class="diretriz">
+            <img src="assets/cultura.jpg" alt="Cultura: Relacionamento, Oportunidade, Crescimento, Autonomia e Gratidão" />
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         NOSSA METODOLOGIA
+         Diagrama central (imagem em /assets)
+         ======================================================== -->
+    <section class="secao">
+      <div class="secao__faixa-titulo">
+        <div class="secao__faixa-conteudo">
+          <h2 class="secao__titulo">Nossa Metodologia</h2>
+        </div>
+      </div>
+      
+      <div class="secao__corpo">
+        <div class="metodologia">
+          <img src="assets/metodologia.png" alt="Metodologia IBN: Processos, Pessoas, Comunicação, Capacitação e Ferramentas" />
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER injetado por js/components.js -->
+  <div id="site-footer"></div>
+</body>
+</html>
