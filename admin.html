@@ -7,6 +7,7 @@
   <title>Intranet IBN — Administração</title>
 
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/modal.css" />
   <link rel="stylesheet" href="css/admin.css" />
 
   <link
@@ -49,7 +50,7 @@
             <h1 class="hero-rh__titulo">Administração</h1>
             <div class="hero-rh__linha"></div>
             <p class="hero-rh__subtitulo">
-              Cadastre comunicados, documentos e datas importantes do RH.
+              Cadastre comunicados e datas importantes do RH.
             </p>
           </div>
           <div class="admin__usuario">
@@ -91,6 +92,10 @@
               Publicar comunicado
             </button>
           </form>
+
+          <div class="admin__lista" id="listaComunicadosAdmin">
+            <p class="lista-estado">Carregando…</p>
+          </div>
         </section>
 
         <!-- Documentos agora vêm de uma pasta do Google Drive (ver
@@ -108,18 +113,22 @@
           <form class="admin__form" id="formData" novalidate>
             <label class="campo">
               <span class="campo__label">Rótulo</span>
-              <input type="text" id="dataRotulo" class="campo__input" placeholder="Ex: Pagamento" required />
+              <input type="text" id="dataRotulo" class="campo__input" placeholder="Ex: Data de aniversário" required />
             </label>
 
             <label class="campo">
-              <span class="campo__label">Dia / período</span>
-              <input type="text" id="dataDia" class="campo__input" placeholder="Ex: 20/06 ou 15/07 a 29/07" required />
+              <span class="campo__label">Data</span>
+              <input type="date" id="dataDia" class="campo__input" required />
             </label>
 
             <button type="submit" class="btn btn--primario btn--bloco">
               Adicionar data
             </button>
           </form>
+
+          <div class="admin__lista" id="listaDatasAdmin">
+            <p class="lista-estado">Carregando…</p>
+          </div>
         </section>
       </div>
     </div>
@@ -128,6 +137,32 @@
 
   <!-- FOOTER injetado por js/components.js -->
   <div id="site-footer"></div>
+
+  <!-- Modal de confirmação (substitui o confirm do navegador) -->
+  <div class="modal oculto" id="modalConfirmar" role="dialog" aria-modal="true" aria-labelledby="confirmarTitulo">
+    <div class="modal__overlay" data-fechar-confirmar></div>
+
+    <div class="modal__caixa modal__caixa--sm" role="document">
+      <header class="modal__cabecalho">
+        <h3 class="modal__titulo" id="confirmarTitulo">Confirmar exclusão</h3>
+        <button class="modal__fechar" data-fechar-confirmar aria-label="Fechar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </header>
+
+      <div class="confirmar__corpo">
+        <p id="confirmarMensagem">Tem certeza?</p>
+      </div>
+
+      <footer class="modal__rodape">
+        <button class="btn btn--secundario" data-fechar-confirmar>Cancelar</button>
+        <button class="btn btn--perigo" id="confirmarOk">Excluir</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Toast de feedback (substitui o alert do navegador) -->
+  <div class="toast" id="toast" role="status"></div>
 
 </body>
 </html>

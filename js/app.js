@@ -53,19 +53,30 @@ function formatarDiaMes(ts) {
 /* -----------------------------------------------------------
    Modais (abrir / fechar)
    ----------------------------------------------------------- */
+function atualizarScrollLock() {
+  const algumAberto = document.querySelector(".modal:not(.oculto)");
+  document.body.classList.toggle("sem-scroll", Boolean(algumAberto));
+}
+
 function abrirModal(id) {
   document.getElementById(id)?.classList.remove("oculto");
+  atualizarScrollLock();
 }
 
 function fecharModal(elemento) {
   elemento.classList.add("oculto");
+  // Descarrega o iframe pesado do Drive ao fechar o preview
+  if (elemento.id === "modalDocumento") {
+    document.getElementById("modalCorpo").innerHTML = "";
+  }
+  atualizarScrollLock();
 }
 
 document.addEventListener("click", (evento) => {
   const gatilhoFechar = evento.target.closest("[data-fechar-modal]");
-  if (gatilhoFechar) {
-    gatilhoFechar.closest(".modal")?.classList.add("oculto");
-  }
+  if (!gatilhoFechar) return;
+  const modal = gatilhoFechar.closest(".modal");
+  if (modal) fecharModal(modal);
 });
 
 document.addEventListener("keydown", (evento) => {
@@ -155,8 +166,20 @@ document.addEventListener("click", (evento) => {
 
 function abrirPreview(doc) {
   document.getElementById("modalTitulo").textContent = doc.titulo || "Documento";
-  document.getElementById("modalCorpo").innerHTML =
-    `<iframe src="https://drive.google.com/file/d/${esc(doc.id)}/preview" title="${esc(doc.titulo)}"></iframe>`;
+
+  const corpo = document.getElementById("modalCorpo");
+  corpo.innerHTML = `
+    <div class="modal__carregando" id="modalCarregando">
+      <i class="fa-solid fa-spinner fa-spin"></i> Carregando pré-visualização…
+    </div>
+    <iframe id="modalIframe" class="oculto" src="https://drive.google.com/file/d/${esc(doc.id)}/preview" title="${esc(doc.titulo)}"></iframe>`;
+
+  const iframe = document.getElementById("modalIframe");
+  iframe.addEventListener("load", () => {
+    document.getElementById("modalCarregando")?.remove();
+    iframe.classList.remove("oculto");
+  });
+
   document.getElementById("modalDownload").setAttribute("href", doc.url || "#");
   abrirModal("modalDocumento");
 }

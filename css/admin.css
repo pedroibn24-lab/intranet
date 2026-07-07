@@ -96,10 +96,112 @@
   border: 1px solid #bfe0cd;
 }
 
-/* Ajuste do input de arquivo */
-input[type="file"].campo__input {
-  padding: 9px 12px;
-  cursor: pointer;
+/* Listas de itens cadastrados (com excluir) */
+.admin__lista {
+  margin-top: 18px;
+  border-top: 1px solid var(--borda-suave);
+  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--borda-suave);
+  border-radius: var(--raio-sm);
+  background: var(--cor-superficie-alt);
+}
+
+.admin__item-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.admin__item-info strong {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin__item-info span {
+  font-size: 12.5px;
+  color: var(--cor-texto-suave);
+}
+
+.admin__excluir {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #b3402e;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.admin__excluir:hover {
+  background: #f7e3df;
+}
+
+/* Modal de confirmação (menor que o padrão) */
+.modal__caixa--sm {
+  max-width: 420px;
+}
+
+.confirmar__corpo {
+  padding: 22px;
+  font-size: 15px;
+  color: var(--cor-texto);
+}
+
+.btn--perigo {
+  background: #b3402e;
+  color: #fff;
+}
+
+.btn--perigo:hover {
+  background: #97331f;
+}
+
+/* Toast (aviso flutuante) */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%) translateY(14px);
+  padding: 12px 22px;
+  border-radius: var(--raio-pill);
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: var(--sombra-media);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
+  z-index: 1100;
+}
+
+.toast--visivel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast--sucesso {
+  background: #2f7d54;
+}
+
+.toast--erro {
+  background: #b3402e;
 }
 
 @media (max-width: 720px) {

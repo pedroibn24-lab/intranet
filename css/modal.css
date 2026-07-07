@@ -12,6 +12,19 @@
   padding: 24px;
 }
 
+body.sem-scroll {
+  overflow: hidden;
+}
+
+.modal__carregando {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--cor-texto-suave);
+  font-size: 14px;
+  padding: 40px 20px;
+}
+
 .modal__overlay {
   position: absolute;
   inset: 0;
