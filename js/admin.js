@@ -3,12 +3,11 @@
    Área administrativa (admin.html):
    - Libera o conteúdo apenas para usuários autenticados com
      e-mail do domínio corporativo (senão, mostra "Área restrita")
-   - Cadastra Comunicados e Datas no Firestore
-   - Cadastra Documentos: faz upload do arquivo no Storage e
-     salva a URL no Firestore
+   - Cadastra Comunicados e Datas importantes no Firestore
+   (Documentos são geridos por uma pasta do Google Drive, não aqui.)
    ========================================================= */
 
-import { auth, db, storage } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
 import {
   onAuthStateChanged,
   signOut,
@@ -19,11 +18,6 @@ import {
   serverTimestamp,
   Timestamp,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 /* Mesmos domínios aceitos no cadastro (ver auth.js) */
 const DOMINIOS_PERMITIDOS = ["ibnegocios.com.br"];
@@ -119,48 +113,6 @@ formComunicado.addEventListener("submit", async (evento) => {
     console.error(erro);
   } finally {
     bloquearEnvio(formComunicado, false);
-  }
-});
-
-/* -----------------------------------------------------------
-   Formulário: Novo documento (upload no Storage + Firestore)
-   ----------------------------------------------------------- */
-const formDocumento = document.getElementById("formDocumento");
-const msgDocumento = document.getElementById("msgDocumento");
-
-formDocumento.addEventListener("submit", async (evento) => {
-  evento.preventDefault();
-  const arquivo = document.getElementById("docArquivo").files[0];
-
-  if (!arquivo) {
-    mostrarMensagem(msgDocumento, "Selecione um arquivo.", "erro");
-    return;
-  }
-
-  bloquearEnvio(formDocumento, true, "Enviando…");
-
-  try {
-    const caminho = `documentos/${Date.now()}_${arquivo.name}`;
-    const referencia = ref(storage, caminho);
-    await uploadBytes(referencia, arquivo);
-    const url = await getDownloadURL(referencia);
-
-    await addDoc(collection(db, "documentos"), {
-      titulo: document.getElementById("docTitulo").value.trim(),
-      data: dataParaTimestamp(document.getElementById("docData").value),
-      arquivoUrl: url,
-      arquivoNome: arquivo.name,
-      arquivoTipo: arquivo.type,
-      criadoEm: serverTimestamp(),
-    });
-
-    mostrarMensagem(msgDocumento, "Documento enviado com sucesso!", "sucesso");
-    formDocumento.reset();
-  } catch (erro) {
-    mostrarMensagem(msgDocumento, "Erro ao enviar o documento. Tente novamente.", "erro");
-    console.error(erro);
-  } finally {
-    bloquearEnvio(formDocumento, false);
   }
 });
 

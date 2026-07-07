@@ -178,6 +178,22 @@ img {
   white-space: nowrap;
 }
 
+.perfil__sair {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--cor-texto);
+  font-size: 16px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.perfil__sair:hover {
+  background: var(--borda-suave);
+  color: #b3402e;
+}
+
 /* =========================================================
    HERO — Início
    ========================================================= */

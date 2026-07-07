@@ -1,7 +1,7 @@
 /* =========================================================
    firebase-config.js
    Inicializa o Firebase (CDN v10, módulos ES) e exporta os
-   serviços usados no projeto: Auth, Firestore e Storage.
+   serviços usados no projeto: Auth e Firestore.
 
    >>> COLE AQUI as chaves do SEU projeto (Console do Firebase >
        Configurações do projeto > Seus apps > SDK do Firebase).
@@ -10,7 +10,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCUXFDqPZaurztxa4mLpYXu1YusXIymU84",
@@ -25,5 +24,4 @@ const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const storage = getStorage(app);
 

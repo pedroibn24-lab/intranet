@@ -140,6 +140,34 @@ function montarVoltarAoTopo() {
 }
 
 /* -----------------------------------------------------------
+   Estado de sessão no header: mostra o nome do usuário logado
+   e o botão Sair; ou "Entrar" quando ninguém está logado.
+   ----------------------------------------------------------- */
+function configurarSessao() {
+  const perfil = document.getElementById("perfilUsuario");
+  const nome = document.getElementById("perfilNome");
+  const sair = document.getElementById("perfilSair");
+  if (!perfil || !nome || !sair) return;
+
+  onAuthStateChanged(auth, (usuario) => {
+    if (usuario) {
+      nome.textContent = usuario.displayName || usuario.email;
+      perfil.setAttribute("href", "admin.html");
+      sair.classList.remove("oculto");
+    } else {
+      nome.textContent = "Entrar";
+      perfil.setAttribute("href", "login.html");
+      sair.classList.add("oculto");
+    }
+  });
+
+  sair.addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.href = "index.html";
+  });
+}
+
+/* -----------------------------------------------------------
    Inicialização: injeta os componentes nos placeholders.
    ----------------------------------------------------------- */
 function iniciarComponentes() {
@@ -150,6 +178,7 @@ function iniciarComponentes() {
   if (alvoFooter) alvoFooter.innerHTML = montarRodape();
 
   montarVoltarAoTopo();
+  configurarSessao();
 }
 
 // Executa assim que o DOM estiver pronto

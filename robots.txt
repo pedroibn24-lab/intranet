@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# Sem sitemap: não queremos ajudar buscadores a descobrir as páginas.
