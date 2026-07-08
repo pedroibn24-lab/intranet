@@ -133,8 +133,8 @@ body.sem-scroll {
 /* Visor de imagem com zoom (a imagem sempre cabe inteira no modal) */
 .visor {
   position: relative;
-  max-width: 100%;
-  max-height: calc(90vh - 170px);
+  width: 100%;
+  height: calc(90vh - 170px);
   overflow: hidden;
   display: flex;
   align-items: center;

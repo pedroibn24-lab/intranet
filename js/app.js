@@ -189,72 +189,67 @@ function configurarZoom(img) {
   let arrastando = false;
   let iniX = 0;
   let iniY = 0;
-  let downX = 0;
-  let downY = 0;
-  let moveu = false;
 
-  function aplicar() {
-    img.style.transform = `translate(${x}px, ${y}px) scale(${escala})`;
-    img.style.cursor = escala > 1 ? (arrastando ? "grabbing" : "grab") : "zoom-in";
+  // Impede arrastar a imagem para longe demais (sempre deixa boa parte visível)
+  function clampar() {
+    const W = visor.clientWidth;
+    const H = visor.clientHeight;
+    const sw = img.offsetWidth * escala;
+    const sh = img.offsetHeight * escala;
+    const folga = 40;
+    const maxX = sw >= W ? (sw - W) / 2 + folga : (W - sw) / 2;
+    const maxY = sh >= H ? (sh - H) / 2 + folga : (H - sh) / 2;
+    x = Math.max(-maxX, Math.min(maxX, x));
+    y = Math.max(-maxY, Math.min(maxY, y));
   }
 
-  // Amplia mantendo o ponto sob o cursor fixo (cx/cy). Sem cursor = centro.
+  function aplicar() {
+    clampar();
+    img.style.transform = `translate(${x}px, ${y}px) scale(${escala})`;
+    img.style.cursor = arrastando ? "grabbing" : "grab";
+  }
+
+  // Amplia mantendo o ponto sob o cursor fixo (cx/cy)
   function zoom(novaEscala, cx, cy) {
     novaEscala = Math.min(5, Math.max(1, novaEscala));
     const rect = visor.getBoundingClientRect();
-    const alvoX = (cx ?? rect.left + rect.width / 2) - (rect.left + rect.width / 2);
-    const alvoY = (cy ?? rect.top + rect.height / 2) - (rect.top + rect.height / 2);
+    const alvoX = cx - (rect.left + rect.width / 2);
+    const alvoY = cy - (rect.top + rect.height / 2);
     const fator = novaEscala / escala;
     x = alvoX - (alvoX - x) * fator;
     y = alvoY - (alvoY - y) * fator;
     escala = novaEscala;
-    if (escala === 1) {
-      x = 0;
-      y = 0;
-    }
     aplicar();
   }
 
-  // Scroll amplia/reduz na direção do cursor
+  // Zoom SÓ no scroll (na direção do cursor)
   visor.addEventListener("wheel", (evento) => {
     evento.preventDefault();
     zoom(escala * (evento.deltaY < 0 ? 1.2 : 0.83), evento.clientX, evento.clientY);
   }, { passive: false });
 
+  // Clique + arrastar SÓ move a imagem (nunca dá zoom)
   img.addEventListener("pointerdown", (evento) => {
-    downX = evento.clientX;
-    downY = evento.clientY;
-    moveu = false;
-    if (escala > 1) {
-      arrastando = true;
-      iniX = evento.clientX - x;
-      iniY = evento.clientY - y;
-      img.setPointerCapture(evento.pointerId);
-      aplicar();
-    }
+    arrastando = true;
+    iniX = evento.clientX - x;
+    iniY = evento.clientY - y;
+    img.setPointerCapture(evento.pointerId);
+    aplicar();
     evento.preventDefault();
   });
 
   img.addEventListener("pointermove", (evento) => {
-    if (Math.abs(evento.clientX - downX) > 4 || Math.abs(evento.clientY - downY) > 4) {
-      moveu = true;
-    }
     if (!arrastando) return;
     x = evento.clientX - iniX;
     y = evento.clientY - iniY;
-    img.style.transform = `translate(${x}px, ${y}px) scale(${escala})`;
+    aplicar();
   });
 
   img.addEventListener("pointerup", (evento) => {
-    if (arrastando) {
-      arrastando = false;
-      img.releasePointerCapture(evento.pointerId);
-      aplicar();
-    }
-    // Clique simples (sem arrastar) alterna entre normal e ampliado no ponto
-    if (!moveu) {
-      zoom(escala > 1 ? 1 : 2.5, evento.clientX, evento.clientY);
-    }
+    if (!arrastando) return;
+    arrastando = false;
+    img.releasePointerCapture(evento.pointerId);
+    aplicar();
   });
 }
 
