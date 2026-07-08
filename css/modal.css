@@ -139,7 +139,7 @@ body.sem-scroll {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1b1b1b;
+  background: var(--cor-superficie-alt);
   border-radius: var(--raio-sm);
   touch-action: none;
 }
