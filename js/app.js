@@ -196,8 +196,9 @@ function configurarZoom(img) {
     const H = visor.clientHeight;
     const sw = img.offsetWidth * escala;
     const sh = img.offsetHeight * escala;
-    const maxX = sw >= W ? (sw - W) / 2 : (W - sw) / 2;
-    const maxY = sh >= H ? (sh - H) / 2 : (H - sh) / 2;
+    const folga = 40;
+    const maxX = sw >= W ? (sw - W) / 2 + folga : (W - sw) / 2;
+    const maxY = sh >= H ? (sh - H) / 2 + folga : (H - sh) / 2;
     x = Math.max(-maxX, Math.min(maxX, x));
     y = Math.max(-maxY, Math.min(maxY, y));
   }
