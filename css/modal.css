@@ -58,6 +58,11 @@ body.sem-scroll {
   }
 }
 
+/* Preview de documento: janela mais larga */
+#modalDocumento .modal__caixa {
+  max-width: 1050px;
+}
+
 .modal__cabecalho {
   display: flex;
   align-items: center;
