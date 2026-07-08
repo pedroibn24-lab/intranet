@@ -116,21 +116,20 @@ body.sem-scroll {
 
 /* Corpo do preview de documento (imagem) */
 .modal__corpo {
-  padding: 22px;
-  overflow: auto;
+  padding: 16px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 200px;
   background: var(--cor-superficie-alt);
 }
 
-/* Visor de imagem com zoom */
+/* Visor de imagem com zoom (a imagem sempre cabe inteira no modal) */
 .visor {
   position: relative;
-  width: 100%;
-  height: 64vh;
+  max-width: 100%;
+  max-height: calc(90vh - 170px);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -141,8 +140,9 @@ body.sem-scroll {
 }
 
 .visor__img {
+  display: block;
   max-width: 100%;
-  max-height: 64vh;
+  max-height: calc(90vh - 170px);
   transform-origin: center center;
   user-select: none;
   will-change: transform;
@@ -177,7 +177,7 @@ body.sem-scroll {
 
 .modal__corpo iframe {
   width: 100%;
-  height: 70vh;
+  height: calc(90vh - 170px);
   border: none;
   border-radius: var(--raio-sm);
   background: #fff;
