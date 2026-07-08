@@ -156,12 +156,10 @@ function abrirPreview(doc) {
     corpo.innerHTML = carregando + `
       <div class="visor" id="visor">
         <img id="modalMidia" class="oculto visor__img" src="${esc(doc.arquivoUrl)}" alt="${esc(doc.titulo)}" draggable="false" />
-      </div>
-      <div class="visor__zoom">
-        <button type="button" id="zoomMenos" aria-label="Diminuir zoom"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
-        <span id="zoomNivel">100%</span>
-        <button type="button" id="zoomMais" aria-label="Aumentar zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
-        <button type="button" id="zoomReset" aria-label="Redefinir zoom"><i class="fa-solid fa-arrows-rotate"></i></button>
+        <div class="visor__zoom">
+          <button type="button" id="zoomMais" aria-label="Aumentar zoom"><i class="fa-solid fa-plus"></i></button>
+          <button type="button" id="zoomMenos" aria-label="Diminuir zoom"><i class="fa-solid fa-minus"></i></button>
+        </div>
       </div>`;
 
     const img = document.getElementById("modalMidia");
@@ -196,11 +194,9 @@ function configurarZoom(img) {
   let iniY = 0;
 
   const visor = document.getElementById("visor");
-  const nivelEl = document.getElementById("zoomNivel");
 
   function aplicar() {
     img.style.transform = `translate(${x}px, ${y}px) scale(${escala})`;
-    nivelEl.textContent = Math.round(escala * 100) + "%";
     img.style.cursor = escala > 1 ? "grab" : "default";
   }
 
@@ -215,7 +211,6 @@ function configurarZoom(img) {
 
   document.getElementById("zoomMais").addEventListener("click", () => definirEscala(escala + 0.3));
   document.getElementById("zoomMenos").addEventListener("click", () => definirEscala(escala - 0.3));
-  document.getElementById("zoomReset").addEventListener("click", () => definirEscala(1));
   img.addEventListener("dblclick", () => definirEscala(escala > 1 ? 1 : 2));
 
   visor.addEventListener("wheel", (evento) => {
