@@ -1,9 +1,9 @@
 /* =========================================================
    app.js
    Página Recursos Humanos:
-   - Documentos: carregados de uma pasta do Google Drive
-     (via Google Apps Script — ver google-apps-script.gs)
-   - Comunicados e datas: do Firestore (tempo real)
+   - Documentos, comunicados e datas do Firestore (tempo real)
+   - Arquivos dos documentos ficam no servidor (upload.php);
+     o Firestore guarda os dados + a URL do arquivo
    - Janelas "Ver todos" (com busca) e preview do documento
    ========================================================= */
 
@@ -14,9 +14,6 @@ import {
   orderBy,
   onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-/* >>> COLE AQUI a URL do App da Web do Google Apps Script <<< */
-const URL_DOCUMENTOS_DRIVE = "https://script.google.com/macros/s/AKfycbzx9MEBGr1WnmNN0YuUXM2fCo07JK4_s0DKVRSOPx0oT1q_RqUT-dUVqUfkf1lyHWTi/exec";
 
 const LIMITE_RESUMO_DOCS = 4;
 const LIMITE_RESUMO_COMUNICADOS = 3;
@@ -36,7 +33,9 @@ function esc(texto = "") {
     .replace(/'/g, "&#39;");
 }
 
-function formatarDataBR(data) {
+function formatarData(ts) {
+  if (!ts?.toDate) return "";
+  const data = ts.toDate();
   const dia = String(data.getDate()).padStart(2, "0");
   const mes = String(data.getMonth() + 1).padStart(2, "0");
   return `${dia}/${mes}/${data.getFullYear()}`;
@@ -65,7 +64,6 @@ function abrirModal(id) {
 
 function fecharModal(elemento) {
   elemento.classList.add("oculto");
-  // Descarrega o iframe pesado do Drive ao fechar o preview
   if (elemento.id === "modalDocumento") {
     document.getElementById("modalCorpo").innerHTML = "";
   }
@@ -91,7 +89,7 @@ document.getElementById("verTodosComunicados")
   ?.addEventListener("click", () => abrirModal("modalTodosComunicados"));
 
 /* -----------------------------------------------------------
-   Documentos (Google Drive)
+   Documentos
    ----------------------------------------------------------- */
 function itemDocumentoHTML(doc) {
   return `
@@ -99,12 +97,12 @@ function itemDocumentoHTML(doc) {
       <span class="documento__icone"><i class="fa-regular fa-file-lines"></i></span>
       <div class="documento__info">
         <div class="documento__titulo">${esc(doc.titulo)}</div>
-        <div class="documento__meta">Atualizado em ${esc(doc.atualizadoTexto)}</div>
+        <div class="documento__meta">Atualizado em ${esc(formatarData(doc.data))}</div>
       </div>
       <div class="documento__acoes">
         <button class="btn-ver-documento" data-id="${esc(doc.id)}">Ver documento</button>
-        <a class="icone-botao icone-botao--sm" href="${esc(doc.url)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir no Drive">
-          <i class="fa-solid fa-up-right-from-square"></i>
+        <a class="icone-botao icone-botao--sm" href="${esc(doc.arquivoUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Baixar">
+          <i class="fa-solid fa-download"></i>
         </a>
       </div>
     </li>`;
@@ -115,7 +113,7 @@ function renderDocumentos() {
   if (resumo) {
     resumo.innerHTML = documentos.length
       ? documentos.slice(0, LIMITE_RESUMO_DOCS).map(itemDocumentoHTML).join("")
-      : `<li class="lista-estado">Nenhum documento na pasta.</li>`;
+      : `<li class="lista-estado">Nenhum documento cadastrado.</li>`;
   }
   filtrarDocumentos();
 }
@@ -125,7 +123,7 @@ function filtrarDocumentos() {
   if (!alvo) return;
   const termo = (document.getElementById("buscaTodosDocumentos")?.value || "").toLowerCase().trim();
   const lista = termo
-    ? documentos.filter((d) => d.titulo.toLowerCase().includes(termo))
+    ? documentos.filter((d) => (d.titulo || "").toLowerCase().includes(termo))
     : documentos;
   alvo.innerHTML = lista.length
     ? lista.map(itemDocumentoHTML).join("")
@@ -135,27 +133,8 @@ function filtrarDocumentos() {
 document.getElementById("buscaTodosDocumentos")
   ?.addEventListener("input", filtrarDocumentos);
 
-async function carregarDocumentos() {
-  const resumo = document.getElementById("listaDocumentos");
-  try {
-    const resposta = await fetch(URL_DOCUMENTOS_DRIVE);
-    const arquivos = await resposta.json();
-    documentos = arquivos.map((a) => ({
-      id: a.id,
-      titulo: a.nome.replace(/\.[^.]+$/, ""),
-      tipo: a.tipo,
-      url: a.url,
-      atualizadoTexto: formatarDataBR(new Date(a.atualizado)),
-    }));
-    renderDocumentos();
-  } catch (erro) {
-    console.error("Erro ao carregar documentos do Drive:", erro);
-    if (resumo) resumo.innerHTML = `<li class="lista-estado">Erro ao carregar documentos.</li>`;
-  }
-}
-
 /* -----------------------------------------------------------
-   Preview do documento (Ver documento) — visualizador do Drive
+   Preview do documento (Ver documento) — arquivo direto do servidor
    ----------------------------------------------------------- */
 document.addEventListener("click", (evento) => {
   const botao = evento.target.closest(".btn-ver-documento");
@@ -166,26 +145,31 @@ document.addEventListener("click", (evento) => {
 
 function abrirPreview(doc) {
   document.getElementById("modalTitulo").textContent = doc.titulo || "Documento";
-
   const corpo = document.getElementById("modalCorpo");
-  corpo.innerHTML = `
+  const carregando = `
     <div class="modal__carregando" id="modalCarregando">
-      <i class="fa-solid fa-spinner fa-spin"></i> Carregando pré-visualização…
-    </div>
-    <iframe id="modalIframe" class="oculto" src="https://drive.google.com/file/d/${esc(doc.id)}/preview" title="${esc(doc.titulo)}"></iframe>`;
+      <i class="fa-solid fa-spinner fa-spin"></i> Carregando…
+    </div>`;
 
-  const iframe = document.getElementById("modalIframe");
-  iframe.addEventListener("load", () => {
+  const ehImagem = (doc.arquivoTipo || "").startsWith("image/");
+  const elemento = ehImagem
+    ? `<img id="modalMidia" class="oculto" src="${esc(doc.arquivoUrl)}" alt="${esc(doc.titulo)}" />`
+    : `<iframe id="modalMidia" class="oculto" src="${esc(doc.arquivoUrl)}" title="${esc(doc.titulo)}"></iframe>`;
+
+  corpo.innerHTML = carregando + elemento;
+
+  const midia = document.getElementById("modalMidia");
+  midia.addEventListener("load", () => {
     document.getElementById("modalCarregando")?.remove();
-    iframe.classList.remove("oculto");
+    midia.classList.remove("oculto");
   });
 
-  document.getElementById("modalDownload").setAttribute("href", doc.url || "#");
+  document.getElementById("modalDownload").setAttribute("href", doc.arquivoUrl || "#");
   abrirModal("modalDocumento");
 }
 
 /* -----------------------------------------------------------
-   Comunicados (Firestore)
+   Comunicados
    ----------------------------------------------------------- */
 function itemComunicadoHTML(com) {
   return `
@@ -227,7 +211,7 @@ document.getElementById("buscaTodosComunicados")
   ?.addEventListener("input", filtrarComunicados);
 
 /* -----------------------------------------------------------
-   Datas importantes (Firestore)
+   Datas importantes
    ----------------------------------------------------------- */
 function renderDatas(datas) {
   const alvo = document.getElementById("listaDatas");
@@ -242,9 +226,20 @@ function renderDatas(datas) {
 }
 
 /* -----------------------------------------------------------
-   Inicialização
+   Escuta do Firestore em tempo real
    ----------------------------------------------------------- */
-carregarDocumentos();
+onSnapshot(
+  query(collection(db, "documentos"), orderBy("data", "desc")),
+  (snap) => {
+    documentos = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    renderDocumentos();
+  },
+  (erro) => {
+    console.error("Erro ao carregar documentos:", erro);
+    const resumo = document.getElementById("listaDocumentos");
+    if (resumo) resumo.innerHTML = `<li class="lista-estado">Erro ao carregar documentos.</li>`;
+  }
+);
 
 onSnapshot(
   query(collection(db, "comunicados"), orderBy("data", "desc")),

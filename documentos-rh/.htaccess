@@ -1,0 +1,9 @@
+# Pasta de uploads: aqui só ficam arquivos, NUNCA código executável.
+
+# Impede a execução/acesso de qualquer script nesta pasta
+<FilesMatch "(?i)\.(php|phtml|php3|php4|php5|php7|php8|pht|phar|cgi|pl|py|asp|aspx|sh|exe)$">
+  Require all denied
+</FilesMatch>
+
+# Impede listar o conteúdo da pasta pela URL
+Options -Indexes

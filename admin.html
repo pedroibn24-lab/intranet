@@ -50,7 +50,7 @@
             <h1 class="hero-rh__titulo">Administração</h1>
             <div class="hero-rh__linha"></div>
             <p class="hero-rh__subtitulo">
-              Cadastre comunicados e datas importantes do RH.
+              Cadastre comunicados, documentos e datas importantes do RH.
             </p>
           </div>
           <div class="admin__usuario">
@@ -98,9 +98,39 @@
           </div>
         </section>
 
-        <!-- Documentos agora vêm de uma pasta do Google Drive (ver
-             google-apps-script.gs), por isso não há formulário aqui.
-             Para adicionar um documento, basta colocá-lo na pasta. -->
+        <!-- ========== FORM: NOVO DOCUMENTO ========== -->
+        <section class="cartao">
+          <h2 class="cartao__titulo cartao__titulo--sm">
+            <i class="fa-regular fa-file-lines icone-secao"></i> Novo documento
+          </h2>
+
+          <div class="admin__msg oculto" id="msgDocumento" role="alert"></div>
+
+          <form class="admin__form" id="formDocumento" novalidate>
+            <label class="campo">
+              <span class="campo__label">Título</span>
+              <input type="text" id="docTitulo" class="campo__input" required />
+            </label>
+
+            <label class="campo">
+              <span class="campo__label">Data</span>
+              <input type="date" id="docData" class="campo__input" required />
+            </label>
+
+            <label class="campo">
+              <span class="campo__label">Arquivo (imagem ou PDF)</span>
+              <input type="file" id="docArquivo" class="campo__input" accept="image/*,application/pdf" required />
+            </label>
+
+            <button type="submit" class="btn btn--primario btn--bloco">
+              Enviar documento
+            </button>
+          </form>
+
+          <div class="admin__lista" id="listaDocumentosAdmin">
+            <p class="lista-estado">Carregando…</p>
+          </div>
+        </section>
 
         <!-- ========== FORM: NOVA DATA IMPORTANTE ========== -->
         <section class="cartao">

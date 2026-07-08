@@ -3,8 +3,9 @@
    Área administrativa (admin.html):
    - Libera o conteúdo apenas para usuários autenticados com
      e-mail do domínio corporativo (senão, mostra "Área restrita")
-   - Cadastra Comunicados e Datas importantes no Firestore
-   (Documentos são geridos por uma pasta do Google Drive, não aqui.)
+   - Cadastra Comunicados, Documentos e Datas importantes
+   - Documentos: envia o arquivo para o servidor (upload.php) e
+     salva os dados + a URL no Firestore
    ========================================================= */
 
 import { auth, db } from "./firebase-config.js";
@@ -26,6 +27,14 @@ import {
 
 /* Mesmos domínios aceitos no cadastro (ver auth.js) */
 const DOMINIOS_PERMITIDOS = ["ibnegocios.com.br"];
+
+/* Endereço dos scripts PHP (upload/exclusão de arquivos).
+   Deixe URL_SERVIDOR = "" quando o site e os .php estiverem no MESMO
+   domínio (produção). Para testar pelo Live Server local, coloque a
+   URL do seu site, ex: "https://intranet.seudominio.com.br" */
+const URL_SERVIDOR = "";
+const URL_UPLOAD = `${URL_SERVIDOR}/upload.php`;
+const URL_DELETE = `${URL_SERVIDOR}/delete.php`;
 
 /* -----------------------------------------------------------
    Elementos
@@ -128,6 +137,52 @@ formComunicado.addEventListener("submit", async (evento) => {
 });
 
 /* -----------------------------------------------------------
+   Formulário: Novo documento (upload no servidor + Firestore)
+   ----------------------------------------------------------- */
+const formDocumento = document.getElementById("formDocumento");
+const msgDocumento = document.getElementById("msgDocumento");
+
+formDocumento.addEventListener("submit", async (evento) => {
+  evento.preventDefault();
+  const arquivo = document.getElementById("docArquivo").files[0];
+  if (!arquivo) {
+    mostrarMensagem(msgDocumento, "Selecione um arquivo.", "erro");
+    return;
+  }
+
+  bloquearEnvio(formDocumento, true, "Enviando…");
+  try {
+    // Token do admin logado — o upload.php valida antes de salvar
+    const token = await auth.currentUser.getIdToken();
+
+    const dadosForm = new FormData();
+    dadosForm.append("arquivo", arquivo);
+    dadosForm.append("token", token);
+
+    const resposta = await fetch(URL_UPLOAD, { method: "POST", body: dadosForm });
+    const resultado = await resposta.json();
+    if (!resposta.ok) throw new Error(resultado.erro || "Falha no upload.");
+
+    await addDoc(collection(db, "documentos"), {
+      titulo: document.getElementById("docTitulo").value.trim(),
+      data: dataParaTimestamp(document.getElementById("docData").value),
+      arquivoUrl: resultado.url,
+      arquivoNome: resultado.nome,
+      arquivoTipo: resultado.tipo,
+      criadoEm: serverTimestamp(),
+    });
+
+    mostrarMensagem(msgDocumento, "Documento enviado com sucesso!", "sucesso");
+    formDocumento.reset();
+  } catch (erro) {
+    mostrarMensagem(msgDocumento, erro.message || "Erro ao enviar o documento.", "erro");
+    console.error(erro);
+  } finally {
+    bloquearEnvio(formDocumento, false);
+  }
+});
+
+/* -----------------------------------------------------------
    Formulário: Nova data importante
    ----------------------------------------------------------- */
 const formData = document.getElementById("formData");
@@ -158,6 +213,7 @@ formData.addEventListener("submit", async (evento) => {
    ----------------------------------------------------------- */
 const listaComunicadosAdmin = document.getElementById("listaComunicadosAdmin");
 const listaDatasAdmin = document.getElementById("listaDatasAdmin");
+const listaDocumentosAdmin = document.getElementById("listaDocumentosAdmin");
 
 function esc(texto = "") {
   return String(texto)
@@ -207,6 +263,25 @@ onSnapshot(query(collection(db, "datas"), orderBy("criadoEm", "asc")), (snap) =>
       }).join("");
 });
 
+onSnapshot(query(collection(db, "documentos"), orderBy("data", "desc")), (snap) => {
+  listaDocumentosAdmin.innerHTML = snap.empty
+    ? `<p class="lista-estado">Nenhum documento.</p>`
+    : snap.docs.map((d) => {
+        const doc = d.data();
+        // data-nome guarda o arquivo, para o delete apagá-lo também do servidor
+        return `
+          <div class="admin__item">
+            <div class="admin__item-info">
+              <strong>${esc(doc.titulo)}</strong>
+              <span>${esc(formatarDiaMes(doc.data))}</span>
+            </div>
+            <button class="admin__excluir" data-colecao="documentos" data-id="${d.id}" data-nome="${esc(doc.arquivoNome || "")}" aria-label="Excluir">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>`;
+      }).join("");
+});
+
 /* Modal de confirmação: retorna uma Promise que resolve true/false */
 function confirmarExclusao(mensagem) {
   return new Promise((resolve) => {
@@ -253,6 +328,16 @@ document.addEventListener("click", async (evento) => {
 
   try {
     await deleteDoc(doc(db, botao.dataset.colecao, botao.dataset.id));
+
+    // Se for documento, apaga também o arquivo no servidor
+    if (botao.dataset.colecao === "documentos" && botao.dataset.nome) {
+      const token = await auth.currentUser.getIdToken();
+      const dadosForm = new FormData();
+      dadosForm.append("token", token);
+      dadosForm.append("nome", botao.dataset.nome);
+      await fetch(URL_DELETE, { method: "POST", body: dadosForm });
+    }
+
     mostrarToast("Item excluído com sucesso.", "sucesso");
   } catch (erro) {
     console.error("Erro ao excluir:", erro);
