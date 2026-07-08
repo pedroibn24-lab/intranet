@@ -119,17 +119,64 @@ body.sem-scroll {
   padding: 22px;
   overflow: auto;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 200px;
   background: var(--cor-superficie-alt);
 }
 
-.modal__corpo img {
-  max-width: 100%;
-  max-height: 70vh;
+/* Visor de imagem com zoom */
+.visor {
+  width: 100%;
+  height: 64vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1b1b1b;
   border-radius: var(--raio-sm);
-  box-shadow: var(--sombra-card);
+  touch-action: none;
+}
+
+.visor__img {
+  max-width: 100%;
+  max-height: 64vh;
+  transform-origin: center center;
+  user-select: none;
+  will-change: transform;
+}
+
+.visor__zoom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.visor__zoom button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--cor-superficie);
+  border: 1px solid var(--borda);
+  color: var(--cor-texto);
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.visor__zoom button:hover {
+  background: var(--borda-suave);
+}
+
+.visor__zoom span {
+  font-size: 13px;
+  min-width: 48px;
+  text-align: center;
+  color: var(--cor-texto-suave);
 }
 
 .modal__corpo iframe {

@@ -151,21 +151,99 @@ function abrirPreview(doc) {
       <i class="fa-solid fa-spinner fa-spin"></i> Carregando…
     </div>`;
 
-  const ehImagem = (doc.arquivoTipo || "").startsWith("image/");
-  const elemento = ehImagem
-    ? `<img id="modalMidia" class="oculto" src="${esc(doc.arquivoUrl)}" alt="${esc(doc.titulo)}" />`
-    : `<iframe id="modalMidia" class="oculto" src="${esc(doc.arquivoUrl)}" title="${esc(doc.titulo)}"></iframe>`;
+  if ((doc.arquivoTipo || "").startsWith("image/")) {
+    // Imagem: visor com zoom (botões, scroll e arrastar)
+    corpo.innerHTML = carregando + `
+      <div class="visor" id="visor">
+        <img id="modalMidia" class="oculto visor__img" src="${esc(doc.arquivoUrl)}" alt="${esc(doc.titulo)}" draggable="false" />
+      </div>
+      <div class="visor__zoom">
+        <button type="button" id="zoomMenos" aria-label="Diminuir zoom"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+        <span id="zoomNivel">100%</span>
+        <button type="button" id="zoomMais" aria-label="Aumentar zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+        <button type="button" id="zoomReset" aria-label="Redefinir zoom"><i class="fa-solid fa-arrows-rotate"></i></button>
+      </div>`;
 
-  corpo.innerHTML = carregando + elemento;
-
-  const midia = document.getElementById("modalMidia");
-  midia.addEventListener("load", () => {
-    document.getElementById("modalCarregando")?.remove();
-    midia.classList.remove("oculto");
-  });
+    const img = document.getElementById("modalMidia");
+    img.addEventListener("load", () => {
+      document.getElementById("modalCarregando")?.remove();
+      img.classList.remove("oculto");
+    });
+    configurarZoom(img);
+  } else {
+    // PDF e outros: iframe (o próprio visualizador já tem zoom)
+    corpo.innerHTML = carregando + `
+      <iframe id="modalMidia" class="oculto" src="${esc(doc.arquivoUrl)}" title="${esc(doc.titulo)}"></iframe>`;
+    const midia = document.getElementById("modalMidia");
+    midia.addEventListener("load", () => {
+      document.getElementById("modalCarregando")?.remove();
+      midia.classList.remove("oculto");
+    });
+  }
 
   document.getElementById("modalDownload").setAttribute("href", doc.arquivoUrl || "#");
   abrirModal("modalDocumento");
+}
+
+/* Zoom da imagem no preview: botões, roda do mouse e arrastar para mover.
+   Usa pointer events na própria imagem (sem listeners globais que vazariam). */
+function configurarZoom(img) {
+  let escala = 1;
+  let x = 0;
+  let y = 0;
+  let arrastando = false;
+  let iniX = 0;
+  let iniY = 0;
+
+  const visor = document.getElementById("visor");
+  const nivelEl = document.getElementById("zoomNivel");
+
+  function aplicar() {
+    img.style.transform = `translate(${x}px, ${y}px) scale(${escala})`;
+    nivelEl.textContent = Math.round(escala * 100) + "%";
+    img.style.cursor = escala > 1 ? "grab" : "default";
+  }
+
+  function definirEscala(nova) {
+    escala = Math.min(5, Math.max(1, nova));
+    if (escala === 1) {
+      x = 0;
+      y = 0;
+    }
+    aplicar();
+  }
+
+  document.getElementById("zoomMais").addEventListener("click", () => definirEscala(escala + 0.3));
+  document.getElementById("zoomMenos").addEventListener("click", () => definirEscala(escala - 0.3));
+  document.getElementById("zoomReset").addEventListener("click", () => definirEscala(1));
+  img.addEventListener("dblclick", () => definirEscala(escala > 1 ? 1 : 2));
+
+  visor.addEventListener("wheel", (evento) => {
+    evento.preventDefault();
+    definirEscala(escala + (evento.deltaY < 0 ? 0.2 : -0.2));
+  }, { passive: false });
+
+  img.addEventListener("pointerdown", (evento) => {
+    if (escala === 1) return;
+    arrastando = true;
+    iniX = evento.clientX - x;
+    iniY = evento.clientY - y;
+    img.setPointerCapture(evento.pointerId);
+    img.style.cursor = "grabbing";
+  });
+
+  img.addEventListener("pointermove", (evento) => {
+    if (!arrastando) return;
+    x = evento.clientX - iniX;
+    y = evento.clientY - iniY;
+    img.style.transform = `translate(${x}px, ${y}px) scale(${escala})`;
+  });
+
+  img.addEventListener("pointerup", (evento) => {
+    arrastando = false;
+    img.releasePointerCapture(evento.pointerId);
+    img.style.cursor = "grab";
+  });
 }
 
 /* -----------------------------------------------------------
