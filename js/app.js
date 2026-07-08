@@ -186,6 +186,7 @@ function abrirPreview(doc) {
 /* Zoom da imagem no preview: botões, roda do mouse e arrastar para mover.
    Usa pointer events na própria imagem (sem listeners globais que vazariam). */
 function configurarZoom(img) {
+  const visor = document.getElementById("visor");
   let escala = 1;
   let x = 0;
   let y = 0;
@@ -193,15 +194,21 @@ function configurarZoom(img) {
   let iniX = 0;
   let iniY = 0;
 
-  const visor = document.getElementById("visor");
-
   function aplicar() {
     img.style.transform = `translate(${x}px, ${y}px) scale(${escala})`;
-    img.style.cursor = escala > 1 ? "grab" : "default";
+    img.style.cursor = escala > 1 ? (arrastando ? "grabbing" : "grab") : "default";
   }
 
-  function definirEscala(nova) {
-    escala = Math.min(5, Math.max(1, nova));
+  // Amplia mantendo o ponto sob o cursor fixo (cx/cy). Sem cursor = centro.
+  function zoom(novaEscala, cx, cy) {
+    novaEscala = Math.min(5, Math.max(1, novaEscala));
+    const rect = visor.getBoundingClientRect();
+    const alvoX = (cx ?? rect.left + rect.width / 2) - (rect.left + rect.width / 2);
+    const alvoY = (cy ?? rect.top + rect.height / 2) - (rect.top + rect.height / 2);
+    const fator = novaEscala / escala;
+    x = alvoX - (alvoX - x) * fator;
+    y = alvoY - (alvoY - y) * fator;
+    escala = novaEscala;
     if (escala === 1) {
       x = 0;
       y = 0;
@@ -209,13 +216,13 @@ function configurarZoom(img) {
     aplicar();
   }
 
-  document.getElementById("zoomMais").addEventListener("click", () => definirEscala(escala + 0.3));
-  document.getElementById("zoomMenos").addEventListener("click", () => definirEscala(escala - 0.3));
-  img.addEventListener("dblclick", () => definirEscala(escala > 1 ? 1 : 2));
+  document.getElementById("zoomMais").addEventListener("click", () => zoom(escala + 0.5));
+  document.getElementById("zoomMenos").addEventListener("click", () => zoom(escala - 0.5));
+  img.addEventListener("dblclick", (evento) => zoom(escala > 1 ? 1 : 2.5, evento.clientX, evento.clientY));
 
   visor.addEventListener("wheel", (evento) => {
     evento.preventDefault();
-    definirEscala(escala + (evento.deltaY < 0 ? 0.2 : -0.2));
+    zoom(escala * (evento.deltaY < 0 ? 1.2 : 0.83), evento.clientX, evento.clientY);
   }, { passive: false });
 
   img.addEventListener("pointerdown", (evento) => {
@@ -224,7 +231,8 @@ function configurarZoom(img) {
     iniX = evento.clientX - x;
     iniY = evento.clientY - y;
     img.setPointerCapture(evento.pointerId);
-    img.style.cursor = "grabbing";
+    aplicar();
+    evento.preventDefault();
   });
 
   img.addEventListener("pointermove", (evento) => {
@@ -235,9 +243,10 @@ function configurarZoom(img) {
   });
 
   img.addEventListener("pointerup", (evento) => {
+    if (!arrastando) return;
     arrastando = false;
     img.releasePointerCapture(evento.pointerId);
-    img.style.cursor = "grab";
+    aplicar();
   });
 }
 
