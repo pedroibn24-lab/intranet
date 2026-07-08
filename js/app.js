@@ -156,10 +156,6 @@ function abrirPreview(doc) {
     corpo.innerHTML = carregando + `
       <div class="visor" id="visor">
         <img id="modalMidia" class="oculto visor__img" src="${esc(doc.arquivoUrl)}" alt="${esc(doc.titulo)}" draggable="false" />
-        <div class="visor__zoom">
-          <button type="button" id="zoomMais" aria-label="Aumentar zoom"><i class="fa-solid fa-plus"></i></button>
-          <button type="button" id="zoomMenos" aria-label="Diminuir zoom"><i class="fa-solid fa-minus"></i></button>
-        </div>
       </div>`;
 
     const img = document.getElementById("modalMidia");
@@ -193,10 +189,13 @@ function configurarZoom(img) {
   let arrastando = false;
   let iniX = 0;
   let iniY = 0;
+  let downX = 0;
+  let downY = 0;
+  let moveu = false;
 
   function aplicar() {
     img.style.transform = `translate(${x}px, ${y}px) scale(${escala})`;
-    img.style.cursor = escala > 1 ? (arrastando ? "grabbing" : "grab") : "default";
+    img.style.cursor = escala > 1 ? (arrastando ? "grabbing" : "grab") : "zoom-in";
   }
 
   // Amplia mantendo o ponto sob o cursor fixo (cx/cy). Sem cursor = centro.
@@ -216,26 +215,30 @@ function configurarZoom(img) {
     aplicar();
   }
 
-  document.getElementById("zoomMais").addEventListener("click", () => zoom(escala + 0.5));
-  document.getElementById("zoomMenos").addEventListener("click", () => zoom(escala - 0.5));
-  img.addEventListener("dblclick", (evento) => zoom(escala > 1 ? 1 : 2.5, evento.clientX, evento.clientY));
-
+  // Scroll amplia/reduz na direção do cursor
   visor.addEventListener("wheel", (evento) => {
     evento.preventDefault();
     zoom(escala * (evento.deltaY < 0 ? 1.2 : 0.83), evento.clientX, evento.clientY);
   }, { passive: false });
 
   img.addEventListener("pointerdown", (evento) => {
-    if (escala === 1) return;
-    arrastando = true;
-    iniX = evento.clientX - x;
-    iniY = evento.clientY - y;
-    img.setPointerCapture(evento.pointerId);
-    aplicar();
+    downX = evento.clientX;
+    downY = evento.clientY;
+    moveu = false;
+    if (escala > 1) {
+      arrastando = true;
+      iniX = evento.clientX - x;
+      iniY = evento.clientY - y;
+      img.setPointerCapture(evento.pointerId);
+      aplicar();
+    }
     evento.preventDefault();
   });
 
   img.addEventListener("pointermove", (evento) => {
+    if (Math.abs(evento.clientX - downX) > 4 || Math.abs(evento.clientY - downY) > 4) {
+      moveu = true;
+    }
     if (!arrastando) return;
     x = evento.clientX - iniX;
     y = evento.clientY - iniY;
@@ -243,10 +246,15 @@ function configurarZoom(img) {
   });
 
   img.addEventListener("pointerup", (evento) => {
-    if (!arrastando) return;
-    arrastando = false;
-    img.releasePointerCapture(evento.pointerId);
-    aplicar();
+    if (arrastando) {
+      arrastando = false;
+      img.releasePointerCapture(evento.pointerId);
+      aplicar();
+    }
+    // Clique simples (sem arrastar) alterna entre normal e ampliado no ponto
+    if (!moveu) {
+      zoom(escala > 1 ? 1 : 2.5, evento.clientX, evento.clientY);
+    }
   });
 }
 
