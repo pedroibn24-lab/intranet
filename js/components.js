@@ -30,7 +30,7 @@ import {
    ----------------------------------------------------------- */
 const ITENS_NAV = [
   { rotulo: "Início",              href: "index.html" },
-  { rotulo: "Diretoria",           href: "#" },
+  { rotulo: "Diretoria",           href: "diretoria.html" },
   { rotulo: "Acadêmico",           href: "#" },
   { rotulo: "Marketing",           href: "#" },
   { rotulo: "Comercial",           href: "#" },
