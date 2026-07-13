@@ -89,7 +89,7 @@
           </button>
         </div>
 
-        <!-- Lista resumida: preenchida pelo Firestore no passo 4 -->
+        <!-- Lista resumida: preenchida pelo Firestore (app.js) -->
         <ul class="lista-documentos" id="listaDocumentos">
           <li class="lista-estado">Carregando documentos…</li>
         </ul>
@@ -105,7 +105,7 @@
             </h2>
           </div>
 
-          <!-- Lista resumida: preenchida pelo Firestore no passo 4 -->
+          <!-- Lista resumida: preenchida pelo Firestore (app.js) -->
           <div id="listaComunicados">
             <p class="lista-estado">Carregando comunicados…</p>
           </div>
@@ -116,7 +116,7 @@
         </section>
       </aside>
 
-      <!-- Faixa de próximas datas importantes: preenchida no passo do JS -->
+      <!-- Faixa de próximas datas importantes: preenchida pelo Firestore (app.js) -->
       <section class="datas-importantes">
         <div class="datas-importantes__titulo">
           <i class="fa-regular fa-calendar-days icone"></i>
@@ -154,7 +154,7 @@
         <input type="search" id="buscaTodosDocumentos" placeholder="Buscar documento..." />
       </div>
 
-      <!-- Lista completa: preenchida pelo Firestore no passo 4 -->
+      <!-- Lista completa: preenchida pelo Firestore (app.js) -->
       <ul class="lista-documentos modal__lista" id="listaTodosDocumentos">
         <li class="lista-estado">Carregando documentos…</li>
       </ul>
@@ -203,7 +203,7 @@
       </header>
 
       <div class="modal__corpo" id="modalCorpo">
-        <!-- A imagem/preview do documento é injetada aqui pelo JS (Storage) -->
+        <!-- A imagem/preview do documento é injetada aqui pelo JS (URL do arquivo no servidor) -->
       </div>
 
       <footer class="modal__rodape">

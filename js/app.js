@@ -152,7 +152,7 @@ function abrirPreview(doc) {
     </div>`;
 
   if ((doc.arquivoTipo || "").startsWith("image/")) {
-    // Imagem: visor com zoom (botões, scroll e arrastar)
+    // Imagem: visor com zoom (roda do mouse) e arrastar para mover
     corpo.innerHTML = carregando + `
       <div class="visor" id="visor">
         <img id="modalMidia" class="oculto visor__img" src="${esc(doc.arquivoUrl)}" alt="${esc(doc.titulo)}" draggable="false" />
@@ -179,7 +179,7 @@ function abrirPreview(doc) {
   abrirModal("modalDocumento");
 }
 
-/* Zoom da imagem no preview: botões, roda do mouse e arrastar para mover.
+/* Zoom da imagem no preview: roda do mouse para ampliar, arrastar para mover.
    Usa pointer events na própria imagem (sem listeners globais que vazariam). */
 function configurarZoom(img) {
   const visor = document.getElementById("visor");

@@ -319,6 +319,27 @@ img {
   height: auto;
 }
 
+.polos {
+  display: flex;
+  justify-content: center;
+}
+
+.polos__link {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+.polos__link:hover {
+  transform: translateY(-3px);
+}
+
+.polos img {
+  width: 100%;
+  max-width: 1000px;
+  height: auto;
+  border-radius: var(--raio-md);
+}
+
 /* =========================================================
    FOOTER
    ========================================================= */
@@ -525,30 +546,6 @@ img {
 
 .link-ver-todos:hover {
   background: var(--borda-suave);
-}
-
-/* =========================================================
-   Busca de documentos
-   ========================================================= */
-.busca-docs {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--cor-superficie-alt);
-  border: 1px solid var(--borda);
-  border-radius: var(--raio-sm);
-  padding: 10px 14px;
-  margin-bottom: 12px;
-  color: var(--cor-texto-suave);
-}
-
-.busca-docs input {
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 14.5px;
-  color: var(--cor-texto);
-  width: 100%;
 }
 
 /* =========================================================

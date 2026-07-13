@@ -29,10 +29,9 @@ import {
 const DOMINIOS_PERMITIDOS = ["ibnegocios.com.br"];
 
 /* Endereço dos scripts PHP (upload/exclusão de arquivos).
-   Deixe URL_SERVIDOR = "" quando o site e os .php estiverem no MESMO
-   domínio (produção). Para testar pelo Live Server local, coloque a
-   URL do seu site, ex: "https://intranet.seudominio.com.br" */
-const URL_SERVIDOR = "";
+   Para testar pelo Live Server local, coloque a
+   URL do seu site */
+const URL_SERVIDOR = "https://intranet.ibnegocios.com.br";
 const URL_UPLOAD = `${URL_SERVIDOR}/upload.php`;
 const URL_DELETE = `${URL_SERVIDOR}/delete.php`;
 

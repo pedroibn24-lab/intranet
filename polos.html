@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Intranet IBN — Polos</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/polos.css" />
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+
+  <script type="module" src="js/polos.js"></script>
+</head>
+<body>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="polos-hero">
+      <a href="index.html" class="polos-voltar-inicio">
+        <i class="fa-solid fa-arrow-left"></i> Voltar ao início
+      </a>
+      <h1 class="polos-hero__titulo">Conheça Nossos Polos</h1>
+      <img src="assets/anhanguera-unopar%20logo.png" alt="Anhanguera e Unopar" class="polos-hero__logo" />
+      <p class="polos-hero__sub">Anhanguera &amp; Unopar</p>
+      <div class="polos-hero__linha"></div>
+    </section>
+
+    <!-- LISTA DE POLOS -->
+    <div id="vistaLista">
+      <div class="polos-secao">
+        <div class="polos-grid">
+          <div class="polos-coluna polos-coluna--anhanguera">
+            <h2 class="polos-coluna__titulo">Polos Anhanguera</h2>
+            <div class="polos-coluna__lista" id="colAnhanguera"></div>
+          </div>
+          <div class="polos-coluna polos-coluna--unopar">
+            <h2 class="polos-coluna__titulo">Polos Unopar</h2>
+            <div class="polos-coluna__lista" id="colUnopar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aluguel de salas (faixa preta, largura total) -->
+      <section class="aluguel">
+        <div class="aluguel__interno">
+          <img src="assets/aluguel%20salas.png" alt="Aluguel de salas IBN" class="aluguel__img" />
+          <div class="aluguel__info">
+            <span class="aluguel__tag">Aluguel de salas</span>
+            <p class="aluguel__texto">Quer alugar uma sala?<br />Entre em contato:</p>
+            <a class="aluguel__contato" href="https://wa.me/551936450337" target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-whatsapp"></i> 19 3645-0337
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- PÁGINA DE UM POLO (mesma HTML, aparece ao clicar) -->
+    <section class="polos-secao oculto" id="vistaPolo">
+      <button class="polos-voltar" id="voltarLista">
+        <i class="fa-solid fa-arrow-left"></i> Voltar aos polos
+      </button>
+      <div id="poloConteudo"></div>
+    </section>
+
+  </main>
+
+  <!-- Footer igual ao do site -->
+  <footer class="rodape">
+    <p class="rodape__texto">
+      Instituto Brasileiro de Negócios — 2026 — Todos os direitos reservados.
+    </p>
+  </footer>
+
+</body>
+</html>
