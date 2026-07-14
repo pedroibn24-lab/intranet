@@ -409,7 +409,11 @@ img {
    RECURSOS HUMANOS — hero
    ========================================================= */
 .hero-rh {
-  background: linear-gradient(180deg, #efe8dc 0%, #e7ddcc 100%);
+  background-image:
+    linear-gradient(90deg, rgba(239, 232, 220, 0.97) 0%, rgba(239, 232, 220, 0.82) 40%, rgba(239, 232, 220, 0.25) 100%),
+    url("../assets/banner%20rh.png");
+  background-size: cover;
+  background-position: center;
 }
 
 .hero-rh__conteudo {
