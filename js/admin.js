@@ -56,16 +56,24 @@ function dominioPermitido(email) {
    Controle de acesso: só libera para admin autenticado
    ----------------------------------------------------------- */
 onAuthStateChanged(auth, (usuario) => {
-  if (usuario && dominioPermitido(usuario.email)) {
+  if (usuario && usuario.emailVerified && dominioPermitido(usuario.email)) {
     bloqueio.classList.add("oculto");
     conteudo.classList.remove("oculto");
     usuarioNome.textContent = usuario.displayName || usuario.email;
+    return;
+  }
+
+  conteudo.classList.add("oculto");
+  bloqueio.classList.remove("oculto");
+
+  if (!usuario) {
+    bloqueioTexto.textContent =
+      "Você precisa estar autenticado com um e-mail corporativo para acessar a administração.";
+  } else if (!usuario.emailVerified) {
+    bloqueioTexto.textContent =
+      "Confirme seu e-mail antes de acessar esta área. O link foi enviado para o seu e-mail corporativo.";
   } else {
-    conteudo.classList.add("oculto");
-    bloqueio.classList.remove("oculto");
-    bloqueioTexto.textContent = usuario
-      ? "Sua conta não tem permissão para acessar esta área."
-      : "Você precisa estar autenticado com um e-mail corporativo para acessar a administração.";
+    bloqueioTexto.textContent = "Sua conta não tem permissão para acessar esta área.";
   }
 });
 

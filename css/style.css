@@ -402,6 +402,12 @@ img {
   display: none !important;
 }
 
+/* Esconde a página enquanto o guarda.js confere o login. Sem isto, o
+   conteúdo aparece por um instante antes do redirecionamento. */
+.verificando-acesso {
+  visibility: hidden;
+}
+
 .lista-estado {
   display: block;
   padding: 20px 4px;

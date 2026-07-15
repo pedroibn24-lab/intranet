@@ -146,17 +146,3 @@
   text-decoration: none;
 }
 
-/* Link de voltar */
-.auth__voltar {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 22px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--cor-dourado);
-}
-
-.auth__voltar:hover {
-  text-decoration: underline;
-}

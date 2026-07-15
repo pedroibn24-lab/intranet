@@ -26,11 +26,14 @@ service cloud.firestore {
         && request.auth.token.email.matches('.*@ibnegocios[.]com[.]br$');
     }
 
-    /* documentos, comunicados e datas:
-       - leitura: pública (qualquer visitante, sem login)
-       - escrita: apenas domínio corporativo confirmado */
+    /* documentos, comunicados e datas: só domínio corporativo confirmado,
+       tanto para ler quanto para gravar.
+
+       Alcance disto: fecha o CONTEÚDO que vem do Firestore. NÃO fecha as
+       páginas .html nem os arquivos em documentos-rh/ — esses são servidos
+       pelo Apache, que não conhece o Firebase e entrega para quem pedir. */
     match /{colecao}/{documento} {
-      allow read: if true;
+      allow read: if ehCorporativo();
       allow write: if ehCorporativo();
     }
   }
