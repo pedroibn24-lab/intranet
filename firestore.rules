@@ -1,1 +1,37 @@
+/* =========================================================
+   Regras de segurança do Firestore
 
+   ATENÇÃO: este arquivo é só o registro das regras. Ele NÃO entra
+   em vigor sozinho — o deploy por FTP copia ele para o cPanel, onde
+   não serve para nada. Para valer, o conteúdo precisa ser colado no
+   Console: Firebase > Firestore Database > aba Regras > Publicar.
+   Ao mudar as regras no Console, atualize este arquivo também.
+   ========================================================= */
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* Só grava quem tem e-mail corporativo E já confirmou esse e-mail.
+
+       O email_verified é o que faz o domínio valer alguma coisa: sem ele,
+       qualquer pessoa cria uma conta digitando um endereço @ibnegocios.com.br
+       que não é dela (o Firebase não checa isso no cadastro) e passa aqui.
+       Confirmar exige abrir a caixa de entrada — e quem controla quais caixas
+       existem no domínio é a empresa. */
+    function ehCorporativo() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.matches('.*@ibnegocios[.]com[.]br$');
+    }
+
+    /* documentos, comunicados e datas:
+       - leitura: pública (qualquer visitante, sem login)
+       - escrita: apenas domínio corporativo confirmado */
+    match /{colecao}/{documento} {
+      allow read: if true;
+      allow write: if ehCorporativo();
+    }
+  }
+}

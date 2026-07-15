@@ -40,6 +40,12 @@
         <!-- Mensagem de feedback (erro/sucesso) preenchida pelo auth.js -->
         <div class="auth__mensagem oculto" id="authMensagem" role="alert"></div>
 
+        <!-- Só aparece quando o login é barrado por e-mail não confirmado -->
+        <button class="auth__reenviar oculto" id="btnReenviar" type="button">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span id="reenviarTexto">Reenviar e-mail de confirmação</span>
+        </button>
+
         <!-- ========== FORM: LOGIN ========== -->
         <form class="auth__form" id="formLogin" novalidate>
           <label class="campo">

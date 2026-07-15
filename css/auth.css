@@ -125,6 +125,27 @@
   border: 1px solid #bfe0cd;
 }
 
+/* Reenviar o e-mail de confirmação */
+.auth__reenviar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: -8px 0 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--cor-dourado);
+}
+
+.auth__reenviar:hover {
+  text-decoration: underline;
+}
+
+.auth__reenviar:disabled {
+  opacity: 0.6;
+  cursor: default;
+  text-decoration: none;
+}
+
 /* Link de voltar */
 .auth__voltar {
   display: inline-flex;
